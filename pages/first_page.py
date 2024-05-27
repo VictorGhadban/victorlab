@@ -15,17 +15,17 @@ userDataObject = auth.get_user_app_id_proto()
 
 st.title("Simple example to list inputs")
 
-with st.form(key="data-inputs"):
-  mtotal = st.number_input(
-      "Select number of inputs to view in a table:", min_value=5, max_value=100)
-  submitted = st.form_submit_button('Submit')
 
-if submitted:
-  if mtotal is None or mtotal == 0:
-    st.warning("Number of inputs must be provided.")
-    st.stop()
-  else:
-    st.write("Number of inputs in table will be: {}".format(mtotal))
+IMAGE_FILE_LOCATION = 'LOCAL IMAGE PATH'
+with open(IMAGE_FILE_LOCATION, "rb") as f:
+    file_bytes = f.read()
+
+
+prompt = "What is this?"
+inference_params = dict(temperature=0.2, max_tokens=100)
+
+model_prediction = Model("https://clarifai.com/victor_g/Victor_Img_class/models/victor-tl-classifier").predict(inputs = [Inputs.get_multimodal_input(input_id="", image_bytes = file_bytes, raw_text=prompt)], inference_params=inference_params)
+print(model_prediction.outputs[0].data.text.raw)
 
   # Stream inputs from the app. list_inputs give list of dictionaries with inputs and its metadata .
   input_obj = User(user_id=userDataObject.user_id).app(app_id=userDataObject.app_id).inputs()
